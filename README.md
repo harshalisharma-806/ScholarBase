@@ -74,6 +74,28 @@ The objective is to make academic administration more organized, accessible, and
 - Administrator login functionality.
 - Centralized access to management features.
 - Password management through the application settings.
+  ## 📸 Application Screenshots
+
+### Login Page
+![Login Page](Screenshots/Login_page.png)
+
+### Dashboard
+![Dashboard](Dashboard.png)
+
+### Student Management
+![Students](Students.png)
+
+### Course Management
+![Courses](Courses.png)
+
+### Marks Management
+![Marks](Marks.png)
+
+### Reports
+![Reports](Report.png)
+
+### Settings
+![Settings](Settings.png)
 
 ## 🛠️ Technology Stack
 
