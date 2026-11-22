@@ -77,7 +77,7 @@ The objective is to make academic administration more organized, accessible, and
   ## 📸 Application Screenshots
 
 ### Login Page
-![Login Page](Screenshots/Login_page.png)
+![Login Page](Login_page.png)
 
 ### Dashboard
 ![Dashboard](Dashboard.png)
