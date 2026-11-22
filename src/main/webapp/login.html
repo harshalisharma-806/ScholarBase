@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · ScholarBase</title>
+  <meta name="description" content="ScholarBase administrator sign in.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="auth">
+  <section class="auth-art" aria-hidden="true">
+    <a class="brand" href="login.html" tabindex="-1">
+      <img src="assets/img/logo-mark.svg" alt="">
+      <span class="brand-text"><strong>ScholarBase</strong><small>Student Record Management</small></span>
+    </a>
+    <div>
+      <h1>Smarter Student Management, <span>Better Academic Insights.</span></h1>
+      <p class="lead">One workspace for admissions, courses, attendance and results, backed by live analytics.</p>
+      <ul class="feature-list" id="features"></ul>
+    </div>
+    <div class="foot">© <span id="year"></span> ScholarBase · Administrator access only</div>
+  </section>
+
+  <main class="auth-panel">
+    <div class="auth-card">
+      <a class="brand" href="login.html">
+        <img src="assets/img/logo-mark.svg" alt="ScholarBase logo">
+        <span class="brand-text"><strong>ScholarBase</strong><small>Student Record Management</small></span>
+      </a>
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to the administrator console.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="alert error form-alert" role="alert" hidden>
+          <span></span>
+        </div>
+        <div class="alert success" id="loggedOut" role="status" hidden><span>You have been signed out securely.</span></div>
+
+        <div class="field">
+          <label for="username">Username or email</label>
+          <input class="input" id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="admin" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required style="padding-right:48px">
+            <button type="button" class="icon-action toggle" data-toggle-password="password" aria-label="Show password"></button>
+          </div>
+        </div>
+
+        <div class="row-between">
+          <label class="check"><input type="checkbox" id="remember" name="remember" value="true"> Remember me</label>
+          <span class="small muted">Session ends after 30 min of inactivity</span>
+        </div>
+
+        <button type="submit" class="btn primary" id="loginBtn" style="height:46px">Sign in</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script>
+(function () {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('features').innerHTML = [
+    ['students', 'Complete student records with search, filters and profiles'],
+    ['attendance', 'Class-wise attendance with automatic percentages'],
+    ['results', 'Marks, grades and pass/fail from configurable rules'],
+    ['reports', 'Printable reports and CSV export']
+  ].map(function (f) { return '<li><span class="f-ico">' + SB.icon(f[0]) + '</span>' + f[1] + '</li>'; }).join('');
+
+  var form = document.getElementById('loginForm');
+  var btn = document.getElementById('loginBtn');
+  var toggle = form.querySelector('[data-toggle-password]');
+  toggle.innerHTML = SB.icon('eye');
+  SB.bindPasswordToggles(form);
+
+  if (SB.qs('loggedout')) document.getElementById('loggedOut').hidden = false;
+
+  // pre-fill the remembered username, and skip the form when a session already exists
+  SB.api.get('api/login').then(function (info) {
+    if (info.authenticated && !SB.qs('loggedout')) { window.location.replace(SB.url('app/dashboard.html')); return; }
+    if (info.rememberedUser) {
+      form.username.value = info.rememberedUser;
+      form.remember.checked = true;
+      form.password.focus();
+    } else {
+      form.username.focus();
+    }
+  }).catch(function () { form.username.focus(); });
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    SB.clearErrors(form);
+    document.getElementById('loggedOut').hidden = true;
+
+    var errors = {};
+    var username = form.username.value.trim(), password = form.password.value;
+    if (!username) errors.username = 'Enter your username or email.';
+    if (!password) errors.password = 'Enter your password.';
+    if (Object.keys(errors).length) { SB.showErrors(form, errors); return; }
+
+    SB.setBusy(btn, true);
+    try {
+      var res = await SB.api.post('api/login', { username: username, password: password, remember: form.remember.checked ? 'true' : 'false' });
+      window.location.href = SB.url(res.redirect);
+    } catch (err) {
+      SB.setBusy(btn, false);
+      SB.showErrors(form, err.errors || {}, err.message);
+      if (err.status === 401) { form.password.value = ''; form.password.focus(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

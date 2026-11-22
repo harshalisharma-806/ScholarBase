@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ScholarBase">
+  <defs>
+    <linearGradient id="sbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2f6e"/>
+      <stop offset="1" stop-color="#0d1a40"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#sbg)"/>
+  <!-- graduation cap -->
+  <path d="M32 11 L54 21 L32 31 L10 21 Z" fill="#ffffff"/>
+  <path d="M19 27.5 V35 c0 3 6 6 13 6 s13-3 13-6 V27.5 L32 33.5 Z" fill="#b9b2f5"/>
+  <path d="M54 21 V33" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="54" cy="35" r="2.2" fill="#8f86ee"/>
+  <!-- open book -->
+  <path d="M12 46 c7-3 14-2.5 20 1 c6-3.5 13-4 20-1 v8 c-7-3-14-2.5-20 1 c-6-3.5-13-4-20-1 z" fill="#8f86ee"/>
+  <path d="M32 47 V55" stroke="#0d1a40" stroke-width="1.6"/>
+</svg>
